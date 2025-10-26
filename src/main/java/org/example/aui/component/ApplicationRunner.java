@@ -145,13 +145,13 @@ public class ApplicationRunner implements CommandLineRunner {
                 return;
             }
 
-            System.out.print("Enter issuer ID (copy from the list above): ");
-            UUID issuerId = UUID.fromString(scanner.nextLine());
-            Client issuer = clientService.findById(issuerId).orElseThrow(() -> new IllegalArgumentException("Issuer with the given ID not found."));
+            System.out.print("Enter issuer NIP (copy from the list above): ");
+            String issuerNip = scanner.nextLine();
+            Client issuer = clientService.findClientByNip(issuerNip).orElseThrow(() -> new IllegalArgumentException("Issuer with the given NIP not found."));
 
-            System.out.print("Enter client ID (copy from the list above): ");
-            UUID clientId = UUID.fromString(scanner.nextLine());
-            Client client = clientService.findById(clientId).orElseThrow(() -> new IllegalArgumentException("Client with the given ID not found."));
+            System.out.print("Enter client NIP (copy from the list above): ");
+            String clientNip = scanner.nextLine();
+            Client client = clientService.findClientByNip(clientNip).orElseThrow(() -> new IllegalArgumentException("Client with the given NIP not found."));
 
             if (issuer.equals(client)) {
                 System.out.println("Issuer cannot be the same as the client.");
