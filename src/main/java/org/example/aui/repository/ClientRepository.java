@@ -17,4 +17,6 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
     @Query("select distinct c from Client c join c.invoiceList i where i.paid = false and i.issuer = :issuer")
     List<Client> findAllClientsWithUnpaidInvoices(@Param("issuer") Client issuer);
 
+    @Query("select c from Client c join fetch c.address a join fetch a.city")
+    List<Client> findAllWithAddressAndCity();
 }
