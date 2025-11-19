@@ -13,7 +13,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name="invoices")
+@Table(name="invoices", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"issuer_uuid", "invoiceId"})
+})
 public class Invoice {
     @Id
     private UUID uuid;
