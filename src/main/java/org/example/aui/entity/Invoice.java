@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -24,8 +24,9 @@ public class Invoice {
     @Column(name = "net_amount")
     private Double netAmount;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    @Column(updatable = false)
+    @CreationTimestamp
+    private LocalDateTime dateTime;
 
     @Column
     private Boolean paid;
