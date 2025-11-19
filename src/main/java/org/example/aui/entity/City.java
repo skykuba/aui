@@ -27,11 +27,12 @@ public class City {
     @Column
     private String state;
 
-    @Column
+    @Column 
     private String country;
-
+    
     @OneToMany(mappedBy = "city")
-    private List<Adress> adresses = new ArrayList<>();
-
+    @JoinColumn(name = "addres")
+    private List<Adress> adresses;
+    
 
 }
