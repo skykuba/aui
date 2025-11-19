@@ -32,7 +32,7 @@ public class City {
     
     @OneToMany(mappedBy = "city")
     @JoinColumn(name = "addres")
-    private List<Adress> adresses;
+    private List<Address> addresses;
     
 
 }
