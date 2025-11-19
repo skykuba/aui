@@ -31,8 +31,6 @@ public class City {
     private String country;
     
     @OneToMany(mappedBy = "city")
-    @JoinColumn(name = "addres")
-    private List<Address> addresses;
-    
+    private List<Address> addresses = new ArrayList<>();
 
 }
