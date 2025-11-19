@@ -1,13 +1,13 @@
-package org.example.aui.component;
+package org.example.aui.core.component;
 
-import org.example.aui.entity.Address;
-import org.example.aui.entity.City;
-import org.example.aui.entity.Client;
-import org.example.aui.entity.Invoice;
-import org.example.aui.repository.AddressRepository;
-import org.example.aui.repository.CityRepository;
-import org.example.aui.service.ClientService;
-import org.example.aui.service.InvoiceService;
+import org.example.aui.core.entity.Address;
+import org.example.aui.core.entity.City;
+import org.example.aui.core.entity.Client;
+import org.example.aui.core.entity.Invoice;
+import org.example.aui.core.repository.AddressRepository;
+import org.example.aui.core.repository.CityRepository;
+import org.example.aui.core.service.ClientService;
+import org.example.aui.core.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;

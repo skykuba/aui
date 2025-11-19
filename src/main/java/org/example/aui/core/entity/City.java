@@ -1,4 +1,4 @@
-package org.example.aui.entity;
+package org.example.aui.core.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

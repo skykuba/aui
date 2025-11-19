@@ -1,8 +1,8 @@
-package org.example.aui.service;
+package org.example.aui.core.service;
 
-import org.example.aui.entity.Client;
-import org.example.aui.entity.Invoice;
-import org.example.aui.repository.InvoiceRepository;
+import org.example.aui.core.entity.Client;
+import org.example.aui.core.entity.Invoice;
+import org.example.aui.core.repository.InvoiceRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

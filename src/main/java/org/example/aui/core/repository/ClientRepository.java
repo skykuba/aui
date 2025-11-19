@@ -1,6 +1,6 @@
-package org.example.aui.repository;
+package org.example.aui.core.repository;
 
-import org.example.aui.entity.Client;
+import org.example.aui.core.entity.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
