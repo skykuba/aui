@@ -20,7 +20,7 @@ public class Invoice {
     @Id
     private UUID uuid;
 
-    @Column
+    @Column(nullable = false)
     private String invoiceId;
 
     @Column(name = "net_amount")
