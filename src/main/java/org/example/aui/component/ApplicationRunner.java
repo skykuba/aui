@@ -2,6 +2,8 @@ package org.example.aui.component;
 
 import org.example.aui.entity.Client;
 import org.example.aui.entity.Invoice;
+import org.example.aui.repository.AddressRepository;
+import org.example.aui.repository.CityRepository;
 import org.example.aui.service.ClientService;
 import org.example.aui.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +19,17 @@ public class ApplicationRunner implements CommandLineRunner {
 
     private final ClientService clientService;
     private final InvoiceService invoiceService;
+    private final CityRepository cityRepository;
+    private final AddressRepository addressRepository;
     private final Scanner scanner = new Scanner(System.in);
 
     @Autowired
-    public ApplicationRunner(ClientService clientService, InvoiceService invoiceService) {
+    public ApplicationRunner(ClientService clientService, InvoiceService invoiceService,
+                           CityRepository cityRepository, AddressRepository addressRepository) {
         this.clientService = clientService;
         this.invoiceService = invoiceService;
+        this.cityRepository = cityRepository;
+        this.addressRepository = addressRepository;
     }
 
     @Override
