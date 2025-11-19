@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,12 +28,13 @@ public class Client {
     @Column(unique = true)
     private String nip;
 
-    @Column
-    private String address;
-
     @OneToMany(mappedBy = "client")
     private List<Invoice> invoiceList;
 
     @OneToMany(mappedBy = "issuer")
     private List<Invoice> issuedInvoiceList;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id", nullable = false)
+    private Adress address;
 }

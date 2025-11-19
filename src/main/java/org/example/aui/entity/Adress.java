@@ -28,4 +28,7 @@ public class Adress {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id", nullable = false)
     private City city;
+
+    @OneToMany(mappedBy = "address")
+    private ArrayList<Client> clients;
 }
