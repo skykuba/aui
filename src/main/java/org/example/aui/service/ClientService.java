@@ -28,6 +28,11 @@ public class ClientService {
         return repository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public List<Client> findAllWithAddressAndCity() {
+        return repository.findAllWithAddressAndCity();
+    }
+
     @Transactional
     public Client save(Client client){
         return repository.save(client);
