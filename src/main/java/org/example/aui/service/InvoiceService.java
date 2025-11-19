@@ -30,7 +30,12 @@ public class InvoiceService {
 
     @Transactional
     public Invoice save(Invoice invoice) {
-        return repository.save(invoice);
+        if (!repository.existsByIssuerAndInvoiceId(invoice.getIssuer(), invoice.getInvoiceId())){
+            return repository.save(invoice);
+        }
+        else {
+            throw new IllegalArgumentException("Invoice with this number " + invoice.getInvoiceId() + " already exists");
+        }
     }
 
     @Transactional

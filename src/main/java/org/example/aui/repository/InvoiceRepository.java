@@ -10,4 +10,5 @@ import java.util.List;
 public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
 
     List<Invoice> findAllByClientAndPaid(Client client, Boolean paid);
+    Boolean existsByIssuerAndInvoiceId(Client issuer, String invoiceId);
 }
