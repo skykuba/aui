@@ -29,10 +29,10 @@ public class Client {
     private String nip;
 
     @OneToMany(mappedBy = "client")
-    private List<Invoice> invoiceList;
+    private List<Invoice> invoiceList = new ArrayList<>();
 
     @OneToMany(mappedBy = "issuer")
-    private List<Invoice> issuedInvoiceList;
+    private List<Invoice> issuedInvoiceList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", nullable = false)
