@@ -1,5 +1,7 @@
 package org.example.aui.component;
 
+import org.example.aui.entity.Address;
+import org.example.aui.entity.City;
 import org.example.aui.entity.Client;
 import org.example.aui.entity.Invoice;
 import org.example.aui.repository.AddressRepository;
@@ -116,8 +118,34 @@ public class ApplicationRunner implements CommandLineRunner {
             System.out.print("Enter client email: ");
             String email = scanner.nextLine();
 
-            System.out.print("Enter client address: ");
-            String address = scanner.nextLine();
+            // Tworzenie miasta
+            System.out.print("Enter city name: ");
+            String cityName = scanner.nextLine();
+
+            System.out.print("Enter state: ");
+            String state = scanner.nextLine();
+
+            System.out.print("Enter country: ");
+            String country = scanner.nextLine();
+
+            City city = new City();
+            city.setCity(cityName);
+            city.setState(state);
+            city.setCountry(country);
+            cityRepository.save(city);
+
+            // Tworzenie adresu
+            System.out.print("Enter street name: ");
+            String street = scanner.nextLine();
+
+            System.out.print("Enter building number: ");
+            String buildingNumber = scanner.nextLine();
+
+            Address address = new Address();
+            address.setStreet(street);
+            address.setBuildingNumber(buildingNumber);
+            address.setCity(city);
+            addressRepository.save(address);
 
             Client newClient = new Client();
             newClient.setId(UUID.randomUUID());
