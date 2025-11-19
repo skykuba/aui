@@ -87,13 +87,16 @@ public class ApplicationRunner implements CommandLineRunner {
     }
 
     private void listClients() {
-        List<Client> clients = clientService.findAll();
+        List<Client> clients = clientService.findAllWithAddressAndCity();
         if (clients.isEmpty()) {
             System.out.println("No clients in the database.");
             return;
         }
         System.out.println("Client list:");
-        clients.forEach(c -> System.out.printf("  ID: %s, Name: %s, NIP: %s%n", c.getId(), c.getName(), c.getNip()));
+        clients.forEach(c -> System.out.printf("  ID: %s, Name: %s, NIP: %s, City: %s, Country: %s%n",
+                c.getId(), c.getName(), c.getNip(),
+                c.getAddress().getCity().getCity(),
+                c.getAddress().getCity().getCountry()));
     }
 
     private void addClient() {
