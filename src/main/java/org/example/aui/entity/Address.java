@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -31,5 +32,5 @@ public class Address {
     private City city;
 
     @OneToMany(mappedBy = "address")
-    private ArrayList<Client> clients;
+    private List<Client> clients = new ArrayList<>();
 }
