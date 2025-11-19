@@ -206,7 +206,6 @@ public class ApplicationRunner implements CommandLineRunner {
             newInvoice.setUuid(UUID.randomUUID());
             newInvoice.setInvoiceId(invoiceId);
             newInvoice.setNetAmount(netAmount);
-            newInvoice.setDate(new Date());
             newInvoice.setPaid(false);
             newInvoice.setIssuer(issuer);
             newInvoice.setClient(client);
