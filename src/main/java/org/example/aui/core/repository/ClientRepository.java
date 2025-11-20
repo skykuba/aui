@@ -1,6 +1,6 @@
-package org.example.aui.repository;
+package org.example.aui.core.repository;
 
-import org.example.aui.entity.Client;
+import org.example.aui.core.entity.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,4 +17,6 @@ public interface ClientRepository extends JpaRepository<Client, UUID> {
     @Query("select distinct c from Client c join c.invoiceList i where i.paid = false and i.issuer = :issuer")
     List<Client> findAllClientsWithUnpaidInvoices(@Param("issuer") Client issuer);
 
+    @Query("select c from Client c join fetch c.address a join fetch a.city")
+    List<Client> findAllWithAddressAndCity();
 }

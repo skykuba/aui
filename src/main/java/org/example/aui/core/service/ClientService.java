@@ -1,7 +1,7 @@
-package org.example.aui.service;
+package org.example.aui.core.service;
 
-import org.example.aui.entity.Client;
-import org.example.aui.repository.ClientRepository;
+import org.example.aui.core.entity.Client;
+import org.example.aui.core.repository.ClientRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +26,11 @@ public class ClientService {
     @Transactional(readOnly = true)
     public List<Client> findAll() {
         return repository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Client> findAllWithAddressAndCity() {
+        return repository.findAllWithAddressAndCity();
     }
 
     @Transactional

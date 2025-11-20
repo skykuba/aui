@@ -1,9 +1,13 @@
-package org.example.aui.component;
+package org.example.aui.core.component;
 
-import org.example.aui.entity.Client;
-import org.example.aui.entity.Invoice;
-import org.example.aui.service.ClientService;
-import org.example.aui.service.InvoiceService;
+import org.example.aui.core.entity.Address;
+import org.example.aui.core.entity.City;
+import org.example.aui.core.entity.Client;
+import org.example.aui.core.entity.Invoice;
+import org.example.aui.core.repository.AddressRepository;
+import org.example.aui.core.repository.CityRepository;
+import org.example.aui.core.service.ClientService;
+import org.example.aui.core.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -17,12 +21,17 @@ public class ApplicationRunner implements CommandLineRunner {
 
     private final ClientService clientService;
     private final InvoiceService invoiceService;
+    private final CityRepository cityRepository;
+    private final AddressRepository addressRepository;
     private final Scanner scanner = new Scanner(System.in);
 
     @Autowired
-    public ApplicationRunner(ClientService clientService, InvoiceService invoiceService) {
+    public ApplicationRunner(ClientService clientService, InvoiceService invoiceService,
+                           CityRepository cityRepository, AddressRepository addressRepository) {
         this.clientService = clientService;
         this.invoiceService = invoiceService;
+        this.cityRepository = cityRepository;
+        this.addressRepository = addressRepository;
     }
 
     @Override
@@ -80,13 +89,16 @@ public class ApplicationRunner implements CommandLineRunner {
     }
 
     private void listClients() {
-        List<Client> clients = clientService.findAll();
+        List<Client> clients = clientService.findAllWithAddressAndCity();
         if (clients.isEmpty()) {
             System.out.println("No clients in the database.");
             return;
         }
         System.out.println("Client list:");
-        clients.forEach(c -> System.out.printf("  ID: %s, Name: %s, NIP: %s%n", c.getId(), c.getName(), c.getNip()));
+        clients.forEach(c -> System.out.printf("  ID: %s, Name: %s, NIP: %s, City: %s, Country: %s%n",
+                c.getId(), c.getName(), c.getNip(),
+                c.getAddress().getCity().getCity(),
+                c.getAddress().getCity().getCountry()));
     }
 
     private void addClient() {
@@ -106,8 +118,34 @@ public class ApplicationRunner implements CommandLineRunner {
             System.out.print("Enter client email: ");
             String email = scanner.nextLine();
 
-            System.out.print("Enter client address: ");
-            String address = scanner.nextLine();
+            // Tworzenie miasta
+            System.out.print("Enter city name: ");
+            String cityName = scanner.nextLine();
+
+            System.out.print("Enter state: ");
+            String state = scanner.nextLine();
+
+            System.out.print("Enter country: ");
+            String country = scanner.nextLine();
+
+            City city = new City();
+            city.setCity(cityName);
+            city.setState(state);
+            city.setCountry(country);
+            cityRepository.save(city);
+
+            // Tworzenie adresu
+            System.out.print("Enter street name: ");
+            String street = scanner.nextLine();
+
+            System.out.print("Enter building number: ");
+            String buildingNumber = scanner.nextLine();
+
+            Address address = new Address();
+            address.setStreet(street);
+            address.setBuildingNumber(buildingNumber);
+            address.setCity(city);
+            addressRepository.save(address);
 
             Client newClient = new Client();
             newClient.setId(UUID.randomUUID());
@@ -168,7 +206,6 @@ public class ApplicationRunner implements CommandLineRunner {
             newInvoice.setUuid(UUID.randomUUID());
             newInvoice.setInvoiceId(invoiceId);
             newInvoice.setNetAmount(netAmount);
-            newInvoice.setDate(new Date());
             newInvoice.setPaid(false);
             newInvoice.setIssuer(issuer);
             newInvoice.setClient(client);

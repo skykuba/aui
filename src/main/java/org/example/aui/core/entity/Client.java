@@ -1,10 +1,11 @@
-package org.example.aui.entity;
+package org.example.aui.core.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,12 +28,13 @@ public class Client {
     @Column(unique = true)
     private String nip;
 
-    @Column
-    private String address;
-
     @OneToMany(mappedBy = "client")
-    private List<Invoice> invoiceList;
+    private List<Invoice> invoiceList = new ArrayList<>();
 
     @OneToMany(mappedBy = "issuer")
-    private List<Invoice> issuedInvoiceList;
+    private List<Invoice> issuedInvoiceList = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
 }

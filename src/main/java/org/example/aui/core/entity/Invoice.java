@@ -1,31 +1,34 @@
-package org.example.aui.entity;
+package org.example.aui.core.entity;
 
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name="invoices")
+@Table(name="invoices", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"issuer_uuid", "invoiceId"})
+})
 public class Invoice {
     @Id
     private UUID uuid;
 
-    @Column
+    @Column(nullable = false)
     private String invoiceId;
 
     @Column(name = "net_amount")
     private Double netAmount;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    @Column(updatable = false)
+    @CreationTimestamp
+    private LocalDateTime dateTime;
 
     @Column
     private Boolean paid;
