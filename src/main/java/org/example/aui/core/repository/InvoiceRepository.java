@@ -11,4 +11,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, UUID> {
 
     List<Invoice> findAllByClientAndPaid(Client client, Boolean paid);
     Boolean existsByIssuerAndInvoiceId(Client issuer, String invoiceId);
+    List<Invoice> findAllByClient(Client client);
+    List<Invoice> findAllByIssuer(Client issuer);
+    List<Invoice> findAllByClientOrIssuer(Client client, Client issuer);
 }

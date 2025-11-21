@@ -148,7 +148,6 @@ public class ApplicationRunner implements CommandLineRunner {
             addressRepository.save(address);
 
             Client newClient = new Client();
-            newClient.setId(UUID.randomUUID());
             newClient.setName(name);
             newClient.setNip(nip);
             newClient.setEmail(email);
@@ -203,7 +202,6 @@ public class ApplicationRunner implements CommandLineRunner {
             double netAmount = Double.parseDouble(scanner.nextLine());
 
             Invoice newInvoice = new Invoice();
-            newInvoice.setUuid(UUID.randomUUID());
             newInvoice.setInvoiceId(invoiceId);
             newInvoice.setNetAmount(netAmount);
             newInvoice.setPaid(false);

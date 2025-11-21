@@ -111,7 +111,6 @@ public class DataInitializer implements CommandLineRunner {
             String name = this.clientNames.get(i);
             String emailPrefix = name.toLowerCase().replaceAll("[^a-z0-9]", "");
 
-            client.setId(UUID.randomUUID());
             client.setName(name);
             client.setEmail(emailPrefix + "@" + emailPrefix + ".com");
 
@@ -140,7 +139,6 @@ public class DataInitializer implements CommandLineRunner {
                     client = clients.get(random.nextInt(clients.size()));
                 } while (client.equals(issuer));
                 Invoice invoice = new Invoice();
-                invoice.setUuid(UUID.randomUUID());
                 invoice.setInvoiceId("FV/"+(i+1)+"/"+issuer.getName().substring(0,4).toUpperCase());
                 invoice.setNetAmount(1000.00 + (1001.00 - 100.00 * random.nextInt(10))*random.nextInt(10));
                 invoice.setPaid(random.nextBoolean());
