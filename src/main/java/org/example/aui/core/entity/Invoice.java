@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -18,6 +19,8 @@ import java.util.UUID;
 })
 public class Invoice {
     @Id
+    @GeneratedValue
+    @UuidGenerator
     private UUID uuid;
 
     @Column(nullable = false)
@@ -34,10 +37,10 @@ public class Invoice {
     private Boolean paid;
 
     @ManyToOne
-    @JoinColumn(name = "client_uuid")
+    @JoinColumn(name = "client_uuid", nullable = false)
     private Client client;
 
     @ManyToOne
-    @JoinColumn(name = "issuer_uuid")
+    @JoinColumn(name = "issuer_uuid", nullable = false)
     private Client issuer;
 }
