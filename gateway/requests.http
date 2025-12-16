@@ -1,0 +1,174 @@
+@baseUrl = http://localhost:8080
+@contentType = application/json
+@clientId1 =08351d3e-5f88-4bc9-aba8-3c55f488ff92
+@clientId2 =f6dcc452-747a-45ee-84d0-045d31658f66
+@invoiceId1 = 669c9161-a38a-4741-994e-48d6ee67c119
+@invoiceId2 = b6baa67d-01f6-4a8b-81d3-585ef1c2adad
+@invoiceId3 = 2066895e-9587-4db6-81c4-91d83f1ed4c0
+@invoiceId4 = 822292ce-1d7d-43cb-bda6-5fb934f5662a
+###
+
+### Step 1: CREATE FIRST CLIENT
+POST {{baseUrl}}/api/clients/
+Content-Type: {{contentType}}
+
+{
+  "name": "ACME Corporation",
+  "email": "contact@acme.com",
+  "nip": "1234567890",
+  "address": {
+    "street": "Main Street",
+    "buildingNumber": "123",
+    "city": {
+      "city": "New York",
+      "state": "NY",
+      "country": "USA"
+    }
+  }
+}
+
+
+###
+
+### Step 2: CREATE SECOND CLIENT
+POST {{baseUrl}}/api/clients/
+Content-Type: {{contentType}}
+
+{
+  "name": "TechStart Inc",
+  "email": "info@techstart.com",
+  "nip": "5555555555",
+  "address": {
+    "street": "Tech Boulevard",
+    "buildingNumber": "789",
+    "city": {
+      "city": "San Francisco",
+      "state": "CA",
+      "country": "USA"
+    }
+  }
+}
+
+
+###
+
+### Step 3: VERIFY - GET FIRST CLIENT DETAILS
+GET {{baseUrl}}/api/clients/{{clientId1}}
+Accept: {{contentType}}
+
+###
+
+### Step 4: VERIFY - GET SECOND CLIENT DETAILS
+GET {{baseUrl}}/api/clients/{{clientId2}}
+Accept: {{contentType}}
+
+###
+
+### Step 5: CREATE INVOICE FOR FIRST CLIENT
+POST {{baseUrl}}/api/invoices/
+Content-Type: {{contentType}}
+
+{
+  "invoiceId": "INV-2025-001",
+  "netAmount": 1500.50,
+  "paid": false,
+  "clientUuid": "{{clientId1}}",
+  "issuerUuid": "{{clientId1}}"
+}
+
+
+###
+
+### Step 6: CREATE INVOICE FOR SECOND CLIENT
+POST {{baseUrl}}/api/invoices/
+Content-Type: {{contentType}}
+
+{
+  "invoiceId": "INV-2025-002",
+  "netAmount": 3500.00,
+  "paid": false,
+  "clientUuid": "{{clientId2}}",
+  "issuerUuid": "{{clientId1}}"
+}
+
+
+###
+
+### Step 7: VERIFY - GET ALL INVOICES FOR FIRST CLIENT
+GET {{baseUrl}}/api/invoices/client/{{clientId1}}
+Accept: {{contentType}}
+
+###
+
+### Step 8: VERIFY - GET ALL INVOICES FOR SECOND CLIENT
+GET {{baseUrl}}/api/invoices/client/{{clientId2}}
+Accept: {{contentType}}
+
+###
+
+### Step 9: UPDATE FIRST INVOICE (Mark as Paid)
+PUT {{baseUrl}}/api/invoices/{{invoiceId1}}
+Content-Type: {{contentType}}
+
+{
+  "invoiceId": "INV-2025-001",
+  "netAmount": 1500.50,
+  "paid": true,
+  "clientUuid": "{{clientId1}}",
+  "issuerUuid": "{{clientId1}}"
+}
+
+
+
+
+### Step 10: DELETE FIRST INVOICE
+DELETE {{baseUrl}}/api/invoices/{{invoiceId1}}
+
+
+###
+
+### Step 11: DELETE SECOND INVOICE
+DELETE {{baseUrl}}/api/invoices/{{invoiceId2}}
+
+
+###
+
+### Step 12: VERIFY - FIRST CLIENT STILL EXISTS
+GET {{baseUrl}}/api/clients/{{clientId1}}
+Accept: {{contentType}}
+
+###
+
+### Step 13: GET ALL REMAINING CLIENTS
+GET {{baseUrl}}/api/clients/
+Accept: {{contentType}}
+
+###
+
+### Step 14: DELETE FIRST CLIENT
+DELETE {{baseUrl}}/api/clients/{{clientId1}}
+Accept: {{contentType}}
+
+
+###
+
+### Step 15: DELETE SECOND CLIENT
+DELETE {{baseUrl}}/api/clients/{{clientId2}}
+
+###
+
+### Step 16: VERIFY ALL DELETED
+GET {{baseUrl}}/api/clients/
+Accept: {{contentType}}
+
+### Get all clients
+GET {{baseUrl}}/api/clients/
+Accept: {{contentType}}
+
+###
+
+### Get client by ID
+GET {{baseUrl}}/api/clients/{{clientId1}}
+Accept: {{contentType}}
+
+###
