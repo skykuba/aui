@@ -16,5 +16,6 @@ public class AddressDTO {
 
     private UUID id;
     private String street;
+    private String buildingNumber;
     private CityDTO city;
 }
