@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {InvoiceInterface, InvoiceListResponse, CreateOrUpdateInvoiceInterface} from '../../models/invoice.model';
+import {getInvoiceApiUrl} from '../../config/api.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InvoiceApiService {
-  url: string = 'http://localhost:8080/api/invoices/';
+  url: string = getInvoiceApiUrl();
 
   constructor(private http: HttpClient) {}
 

@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Client, ClientListResponse, CreateOrUpdateClientInterface} from '../../models/client.model';
 import {Observable} from 'rxjs';
+import {getClientApiUrl} from '../../config/api.config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClientApiService {
-  url: string='http://localhost:8080/api/clients/';
+  url: string = getClientApiUrl();
 
   constructor(private http: HttpClient) { }
 
