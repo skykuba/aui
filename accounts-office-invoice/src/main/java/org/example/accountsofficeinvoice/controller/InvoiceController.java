@@ -104,6 +104,16 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceDTOs);
     }
 
+    @GetMapping("/client/{clientUuid}/{invoiceUuid}")
+    public ResponseEntity<InvoiceDTO> getClientsInvoiceById(@PathVariable UUID clientUuid, @PathVariable UUID invoiceUuid) {
+        try {
+            Invoice invoice = this.invoiceService.getInvoiceByUuidAndClient(clientUuid, invoiceUuid);
+            return ResponseEntity.ok(convertEntityToDTO(invoice));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
     /**
      * Pobierz wszystkie faktury wydane przez danego emienta
      * GET /api/invoices/issuer/{issuerUuid}

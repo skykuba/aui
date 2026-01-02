@@ -81,6 +81,14 @@ public class InvoiceService {
         return invoiceRepository.findAllByClientOrIssuer(clientUuid, issuerUuid);
     }
 
+    public Invoice getInvoiceByUuidAndClient(UUID clientUuid, UUID invoiceUuid) {
+        Invoice invoice =  this.invoiceRepository.getInvoiceByUuidAndClientUuid(invoiceUuid, clientUuid);
+        if (invoice == null) {
+            throw new IllegalArgumentException("Faktura o UUID " + invoiceUuid + " nie znaleziona dla klienta " + clientUuid);
+        }
+        return invoice;
+    }
+
 
     public Invoice markInvoiceAsPaid(UUID uuid) {
         Optional<Invoice> invoiceOptional = invoiceRepository.findById(uuid);

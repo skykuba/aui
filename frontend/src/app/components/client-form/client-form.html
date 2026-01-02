@@ -1,0 +1,40 @@
+<form [formGroup]="clientForm" (ngSubmit)="onFormSubmit()">
+  <fieldset formGroupName="client">
+    <legend>Dane klienta</legend>
+    <div>
+      <label for="name">Nazwa:</label>
+      <input id="name" type="text" formControlName="name">
+    </div>
+    <div>
+      <label for="nip">NIP:</label>
+      <input id="nip" type="text" formControlName="nip">
+    </div>
+  </fieldset>
+  <fieldset formGroupName="address">
+    <legend>Adres</legend>
+    <div>
+      <label for="street">Ulica:</label>
+      <input id="street" type="text" formControlName="street">
+    </div>
+    <div>
+      <label for="buildingNumber">Numer budynku:</label>
+      <input id="buildingNumber" type="text" formControlName="buildingNumber">
+    </div>
+    <fieldset formGroupName="city">
+      <legend>Miasto</legend>
+      <div>
+        <label for="city">Miasto:</label>
+        <input id="city" type="text" formControlName="city">
+      </div>
+      <div>
+        <label for="state">Województwo:</label>
+        <input id="state" type="text" formControlName="state">
+      </div>
+      <div>
+        <label for="country">Kraj:</label>
+        <input id="country" type="text" formControlName="country">
+      </div>
+    </fieldset>
+  </fieldset>
+  <button type="submit">Zapisz</button>
+</form>

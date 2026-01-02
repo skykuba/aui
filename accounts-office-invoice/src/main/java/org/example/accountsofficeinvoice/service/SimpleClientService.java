@@ -1,7 +1,9 @@
 package org.example.accountsofficeinvoice.service;
 
+import org.example.accountsofficeinvoice.component.ClientCreatedEvent;
 import org.example.accountsofficeinvoice.entity.SimpleClient;
 import org.example.accountsofficeinvoice.repository.SimpleClientRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +14,11 @@ import java.util.UUID;
 public class SimpleClientService {
 
     private final SimpleClientRepository simpleClientRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public SimpleClientService(SimpleClientRepository simpleClientRepository) {
+    public SimpleClientService(SimpleClientRepository simpleClientRepository, ApplicationEventPublisher eventPublisher) {
         this.simpleClientRepository = simpleClientRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     /**
@@ -24,7 +28,9 @@ public class SimpleClientService {
         if (client.getId() == null) {
             client.setId(UUID.randomUUID());
         }
-        return simpleClientRepository.save(client);
+        SimpleClient savedClient = simpleClientRepository.save(client);
+        eventPublisher.publishEvent(new ClientCreatedEvent(savedClient));
+        return savedClient;
     }
 
     /**
@@ -77,4 +83,3 @@ public class SimpleClientService {
         return simpleClientRepository.existsById(uuid);
     }
 }
-

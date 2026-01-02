@@ -14,6 +14,7 @@ public class AddressMapper {
         return AddressDTO.builder()
                 .id(address.getId())
                 .street(address.getStreet())
+                .buildingNumber(address.getBuildingNumber())
                 .city(CityMapper.toDTO(address.getCity()))
                 .build();
     }

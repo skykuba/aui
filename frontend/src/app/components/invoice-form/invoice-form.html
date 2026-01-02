@@ -1,0 +1,49 @@
+<form [formGroup]="invoiceForm" (ngSubmit)="onFormSubmit()">
+  <fieldset>
+    <legend>{{ isEdit ? 'Edytuj fakturę' : 'Nowa faktura' }}</legend>
+
+    @if (invoiceForm.hasError('sameClientAndIssuer')) {
+      <div style="color: red; margin-bottom: 10px;">
+        <strong>Błąd:</strong> Klient i wystawca nie mogą być tą samą osobą!
+      </div>
+    }
+
+    <div>
+      <label for="invoiceId">ID Faktury:</label>
+      <input id="invoiceId" type="text" formControlName="invoiceId" [disabled]="isEdit">
+    </div>
+
+    <div>
+      <label for="clientUuid">Klient:</label>
+      <select id="clientUuid" formControlName="clientUuid">
+        <option value="">-- Wybierz klienta --</option>
+        @for (client of clients; track client.id) {
+          <option [value]="client.id">{{ client.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label for="netAmount">Kwota netto:</label>
+      <input id="netAmount" type="number" formControlName="netAmount" step="0.01" min="0">
+    </div>
+
+    <div>
+      <label for="issuerUuid">Wystawca:</label>
+      <select id="issuerUuid" formControlName="issuerUuid" [disabled]="(invoiceForm.get('issuerUuid')?.value && !isEdit) || (!!clientId && !isEdit)">
+        <option value="">-- Wybierz wystawcę --</option>
+        @for (client of clients; track client.id) {
+          <option [value]="client.id">{{ client.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label for="paid">Zapłacona:</label>
+      <input id="paid" type="checkbox" formControlName="paid">
+    </div>
+  </fieldset>
+
+  <button type="submit" [disabled]="!invoiceForm.valid">{{ isEdit ? 'Zaktualizuj' : 'Utwórz' }}</button>
+</form>
+
