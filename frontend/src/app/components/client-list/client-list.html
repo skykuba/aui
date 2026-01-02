@@ -1,0 +1,15 @@
+<div class="clients-list">
+  <h2>Lista klientów</h2>
+  <ul>
+    @for (client of clients(); track client.name) {
+      <li>
+        <span>{{ client.name }} - {{ client.city }}, {{ client.country }}</span>
+        <button (click)="deleteClient(client.id)">Usuń</button>
+        <button (click)="updateClient(client.id)">Edytuj</button>
+        <button (click)="showClientInvoices(client.id)">Faktury</button>
+      </li>
+    }
+  </ul>
+</div>
+<button [routerLink]="['/clients/new']">Stwórz nowego klienta</button>
+

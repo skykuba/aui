@@ -1,0 +1,11 @@
+<p>client-invoice-list works!</p>
+<button [routerLink]="['/clients', clientId, 'invoices', 'new']">Nowa faktura</button>
+<ul>
+  @for (invoice of invoices(); track invoice.invoiceId) {
+    <li>
+      <span>{{ invoice.invoiceId}} {{invoice.clientName}}</span>
+      <p>{{ invoice.uuid}}</p>
+      <button [routerLink]="['/clients', invoice.clientUuid, 'invoices', invoice.uuid]">Szczegóły</button>
+    </li>
+  }
+</ul>
