@@ -1,6 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import {ClientService} from '../../services/client/client';
-import {Router} from '@angular/router';
+import { Component } from '@angular/core';
 import {ClientForm} from '../client-form/client-form';
 
 @Component({
