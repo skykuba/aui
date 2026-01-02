@@ -32,7 +32,7 @@ export class ClientInvoiceList implements OnInit {
 
     this.invoiceService.getClientsInvoices(clientId)
       .pipe(
-        // switchMap zapobiegra race kondition z odszyfrowywania uuid klienta
+        // switchMap zapobiega race kondition z odszyfrowywania uuid klienta
         switchMap(response => this.invoiceService.processInvoiceResponse(response)),
         catchError(err => {
           console.error('Error loading invoices', err);
