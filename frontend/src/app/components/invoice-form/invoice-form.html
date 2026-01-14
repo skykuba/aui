@@ -10,17 +10,21 @@
 
     <div>
       <label for="invoiceId">ID Faktury:</label>
-      <input id="invoiceId" type="text" formControlName="invoiceId" [disabled]="isEdit">
+      <input id="invoiceId" type="text" formControlName="invoiceId" [readonly]="isEdit">
     </div>
 
     <div>
       <label for="clientUuid">Klient:</label>
-      <select id="clientUuid" formControlName="clientUuid">
-        <option value="">-- Wybierz klienta --</option>
-        @for (client of clients; track client.id) {
-          <option [value]="client.id">{{ client.name }}</option>
-        }
-      </select>
+      @if(isEdit) {
+        <input type="text" [value]="getClientName(invoiceForm.get('clientUuid')?.value)" readonly>
+      } @else {
+        <select id="clientUuid" formControlName="clientUuid">
+          <option value="">-- Wybierz klienta --</option>
+          @for (client of clients; track client.id) {
+            <option [value]="client.id">{{ client.name }}</option>
+          }
+        </select>
+      }
     </div>
 
     <div>
@@ -30,12 +34,16 @@
 
     <div>
       <label for="issuerUuid">Wystawca:</label>
+      @if(isEdit) {
+        <input type="text" [value]="getClientName(invoiceForm.get('issuerUuid')?.value)" readonly>
+      } @else {
       <select id="issuerUuid" formControlName="issuerUuid" [disabled]="(invoiceForm.get('issuerUuid')?.value && !isEdit) || (!!clientId && !isEdit)">
         <option value="">-- Wybierz wystawcę --</option>
         @for (client of clients; track client.id) {
           <option [value]="client.id">{{ client.name }}</option>
         }
       </select>
+      }
     </div>
 
     <div>
@@ -46,4 +54,3 @@
 
   <button type="submit" [disabled]="!invoiceForm.valid">{{ isEdit ? 'Zaktualizuj' : 'Utwórz' }}</button>
 </form>
-

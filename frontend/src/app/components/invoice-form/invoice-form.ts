@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { InvoiceService } from '../../services/invoice/invoice';
 import { ClientService } from '../../services/client/client';
@@ -16,7 +16,8 @@ import { takeUntil } from 'rxjs/operators';
   styleUrl: './invoice-form.css',
   standalone: true,
 })
-export class InvoiceForm implements OnInit, OnDestroy {
+export class InvoiceForm implements OnInit, OnDestroy, OnChanges {
+  @Input() invoiceData: CreateOrUpdateInvoiceInterface | null = null;
   invoiceForm: FormGroup;
   isEdit: boolean = false;
   clientId: string | null = '';
@@ -40,6 +41,15 @@ export class InvoiceForm implements OnInit, OnDestroy {
     }, { validators: this.differentClientAndIssuerValidator });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['invoiceData'] && changes['invoiceData'].currentValue) {
+      this.isEdit = true;
+      const invoice = changes['invoiceData'].currentValue;
+      this.invoiceId = invoice.invoiceId;
+      this.loadInvoiceData(invoice);
+    }
+  }
+
   // Custom validator - klient i wystawca nie mogą być tą samą osobą
   private differentClientAndIssuerValidator(control: AbstractControl): ValidationErrors | null {
     const clientUuid = control.get('clientUuid')?.value;
@@ -53,19 +63,19 @@ export class InvoiceForm implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // Pobierz clientId z URL - to będzie wystawca (issuer)
+    const urlSegments = this.router.url.split('/');
+    this.isEdit = this.isEdit || urlSegments.includes('edit'); // Preserve isEdit from ngOnChanges
     this.clientId = this.activatedRoute.snapshot.paramMap.get('clientId');
 
     // Pobierz listę klientów
     this.clientService.getClients().subscribe(response => {
-      // Backend zwraca tablicę bezpośrednio lub obiekt z polem clients
       let clientData = response.clients || response;
 
       if (Array.isArray(clientData)) {
         this.clients = clientData;
 
-        // Jeśli mamy clientId z URL, ustaw go jako issuerUuid (wystawca)
-        if (this.clientId) {
+        // Ustaw wystawcę (issuer) tylko podczas tworzenia nowej faktury
+        if (!this.isEdit && this.clientId) {
           this.invoiceForm.patchValue({
             issuerUuid: this.clientId
           });
@@ -74,16 +84,14 @@ export class InvoiceForm implements OnInit, OnDestroy {
         console.error('Unexpected response format:', response);
         this.clients = [];
       }
-      console.log('Loaded clients:', this.clients);
     });
 
-    const urlSegments = this.router.url.split('/');
-    this.isEdit = urlSegments.includes('edit') && urlSegments.length > 2;
-
-    if (this.isEdit) {
+    if (this.isEdit && !this.invoiceData) {
       this.invoiceId = this.activatedRoute.snapshot.paramMap.get('invoiceId');
       if (this.clientId && this.invoiceId) {
-        this.loadInvoiceData(this.clientId, this.invoiceId);
+        this.invoiceService.getClientsInvoice(this.clientId, this.invoiceId).subscribe(invoice => {
+          this.loadInvoiceData(invoice);
+        });
       }
     }
 
@@ -104,21 +112,27 @@ export class InvoiceForm implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private loadInvoiceData(clientId: string, invoiceId: string) {
-    this.invoiceService.getClientsInvoice(clientId, invoiceId).subscribe(invoice => {
-      this.invoiceForm.patchValue({
-        invoiceId: invoice.invoiceId,
-        netAmount: invoice.netAmount,
-        paid: invoice.paid,
-        clientUuid: invoice.clientUuid,
-        issuerUuid: invoice.issuerUuid,
-      });
+  private loadInvoiceData(invoice: CreateOrUpdateInvoiceInterface) {
+    this.invoiceForm.patchValue({
+      invoiceId: invoice.invoiceId,
+      netAmount: invoice.netAmount,
+      paid: invoice.paid,
+      clientUuid: invoice.clientUuid,
+      issuerUuid: invoice.issuerUuid,
     });
+    this.invoiceForm.get('issuerUuid')?.disable();
+    this.invoiceForm.get('invoiceId')?.disable();
+  }
+
+  public getClientName(clientId: string): string {
+    if (!clientId || !this.clients) return '';
+    const client = this.clients.find(c => c.id === clientId);
+    return client ? client.name : '';
   }
 
   onFormSubmit() {
     if (this.invoiceForm.valid && this.clientId) {
-      const formValue = this.invoiceForm.value;
+      const formValue = this.invoiceForm.getRawValue(); // Użyj getRawValue(), aby pobrać wartość z wyłączonych pól
       const invoice: CreateOrUpdateInvoiceInterface = {
         invoiceId: formValue.invoiceId,
         netAmount: formValue.netAmount,
@@ -128,12 +142,10 @@ export class InvoiceForm implements OnInit, OnDestroy {
       };
 
       if (this.isEdit && this.invoiceId) {
-        // Edycja - wysyłamy PUT na /api/invoices/{uuid}
         this.invoiceService.updateInvoice(this.clientId, this.invoiceId, invoice).subscribe(() => {
           this.router.navigate(['/clients', this.clientId, 'invoices']);
         });
       } else {
-        // Tworzenie - wysyłamy POST na /api/invoices/client/{clientId}
         this.invoiceService.createInvoice(this.clientId, invoice).subscribe(() => {
           this.router.navigate(['/clients', this.clientId, 'invoices']);
         });
@@ -141,4 +153,3 @@ export class InvoiceForm implements OnInit, OnDestroy {
     }
   }
 }
-
