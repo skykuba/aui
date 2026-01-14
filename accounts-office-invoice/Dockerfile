@@ -15,10 +15,6 @@ COPY --from=build /app/target/*.jar app.jar
 
 # Configuration via environment variables
 ENV SPRING_PROFILES_ACTIVE=prod
-ENV SERVER_PORT=8082
-
-# Expose the application port
-EXPOSE 8082
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]

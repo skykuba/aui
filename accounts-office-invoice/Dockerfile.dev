@@ -14,9 +14,6 @@ RUN chmod +x mvnw
 ENV SPRING_PROFILES_ACTIVE=dev
 ENV SPRING_DEVTOOLS_RESTART_ENABLED=true
 ENV SPRING_DEVTOOLS_LIVERELOAD_ENABLED=true
-ENV SERVER_PORT=8082
-
-EXPOSE 8082
 
 # Run Spring Boot with Maven in development mode
 CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.arguments=--spring.devtools.restart.enabled=true"]
