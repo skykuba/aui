@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-  baseUrl: 'http://localhost:8080/api',
+  baseUrl: (typeof window !== 'undefined' && (window as any).__ENV__?.API_BASE_URL) || 'http://localhost:8080/api',
   endpoints: {
     clients: '/clients/',
     invoices: '/invoices/',
