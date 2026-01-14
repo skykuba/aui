@@ -1,3 +1,5 @@
 <p>update-invoice works!</p>
-<app-invoice-form></app-invoice-form>
-
+<app-invoice-form
+  *ngIf="invoice"
+  [invoiceData]="invoice"
+></app-invoice-form>
