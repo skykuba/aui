@@ -1,3 +1,53 @@
-<p>invoice-details works!</p>
-<p>{{invoice()?.toString()}}</p>
-<button [routerLink]="['/clients', clientId, 'invoices', invoiceId, 'edit']">Edytuj</button>
+<div class="invoice-details-container">
+  @if (invoice(); as inv) {
+    <div class="invoice-header">
+      <h2>Szczegóły Faktury</h2>
+    </div>
+
+    <div class="invoice-content">
+      <div class="invoice-field">
+        <label>Numer faktury:</label>
+        <span>{{ inv.invoiceId }}</span>
+      </div>
+
+      <div class="invoice-field">
+        <label>UUID:</label>
+        <span>{{ inv.uuid }}</span>
+      </div>
+
+      <div class="invoice-field">
+        <label>Kwota netto:</label>
+        <span>{{ inv.netAmount | number: '1.2-2' }} PLN</span>
+      </div>
+
+      <div class="invoice-field">
+        <label>Status płatności:</label>
+        <span [ngClass]="{ 'paid': inv.paid, 'unpaid': !inv.paid }">
+          {{ inv.paid ? 'Opłacona' : 'Nieopłacona' }}
+        </span>
+      </div>
+
+      <div class="invoice-field">
+        <label>UUID Klienta:</label>
+        <span>{{ inv.clientUuid }}</span>
+      </div>
+
+      <div class="invoice-field">
+        <label>UUID Wystawcy:</label>
+        <span>{{ inv.issuerUuid }}</span>
+      </div>
+    </div>
+
+    <div class="invoice-actions">
+      <button [routerLink]="['/clients', clientId, 'invoices', invoiceId, 'edit']" class="btn-edit">
+        Edytuj
+      </button>
+      <button [routerLink]="['/clients', clientId, 'invoices']" class="btn-back">
+        Wróć do listy
+      </button>
+    </div>
+  } @else {
+    <p>Ładowanie danych faktury...</p>
+  }
+</div>
+

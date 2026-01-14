@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule, A
 import { InvoiceService } from '../../services/invoice/invoice';
 import { ClientService } from '../../services/client/client';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CreateOrUpdateInvoiceInterface } from '../../models/invoice.model';
+import { CreateOrUpdateInvoiceInterface, InvoiceInterface } from '../../models/invoice.model';
 import { ClientInterface } from '../../models/client.model';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
@@ -17,7 +17,7 @@ import { takeUntil } from 'rxjs/operators';
   standalone: true,
 })
 export class InvoiceForm implements OnInit, OnDestroy, OnChanges {
-  @Input() invoiceData: CreateOrUpdateInvoiceInterface | null = null;
+  @Input() invoiceData: InvoiceInterface | null = null;
   invoiceForm: FormGroup;
   isEdit: boolean = false;
   clientId: string | null = '';
@@ -112,7 +112,7 @@ export class InvoiceForm implements OnInit, OnDestroy, OnChanges {
     this.destroy$.complete();
   }
 
-  private loadInvoiceData(invoice: CreateOrUpdateInvoiceInterface) {
+  private loadInvoiceData(invoice: InvoiceInterface) {
     this.invoiceForm.patchValue({
       invoiceId: invoice.invoiceId,
       netAmount: invoice.netAmount,
@@ -120,8 +120,10 @@ export class InvoiceForm implements OnInit, OnDestroy, OnChanges {
       clientUuid: invoice.clientUuid,
       issuerUuid: invoice.issuerUuid,
     });
-    this.invoiceForm.get('issuerUuid')?.disable();
+    // Blokuj pola, które nie powinny być edytowane
     this.invoiceForm.get('invoiceId')?.disable();
+    this.invoiceForm.get('clientUuid')?.disable();
+    this.invoiceForm.get('issuerUuid')?.disable();
   }
 
   public getClientName(clientId: string): string {

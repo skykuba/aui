@@ -1,5 +1,52 @@
-<p>update-invoice works!</p>
-<app-invoice-form
-  *ngIf="invoice"
-  [invoiceData]="invoice"
-></app-invoice-form>
+@if (isLoading) {
+  <div class="loading-container">
+    <p>Ładowanie danych faktury...</p>
+  </div>
+} @else if (error) {
+  <div class="error-container">
+    <p class="error-message">{{ error }}</p>
+    <button (click)="onCancel()">Powrót do listy</button>
+  </div>
+} @else if (invoice) {
+  <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
+    <fieldset>
+      <legend>Edytuj fakturę</legend>
+
+      <div class="form-group readonly-field">
+        <label for="invoiceId">ID Faktury:</label>
+        <input id="invoiceId" type="text" [value]="invoice.invoiceId" readonly disabled>
+      </div>
+
+      <div class="form-group readonly-field">
+        <label for="clientName">Klient:</label>
+        <input id="clientName" type="text" [value]="clientName" readonly disabled>
+      </div>
+
+      <div class="form-group readonly-field">
+        <label for="issuerName">Wystawca:</label>
+        <input id="issuerName" type="text" [value]="issuerName" readonly disabled>
+      </div>
+
+      <div class="form-group">
+        <label for="netAmount">Kwota netto:</label>
+        <input id="netAmount" type="number" formControlName="netAmount" step="0.01" min="0">
+        @if (invoiceForm.get('netAmount')?.invalid && invoiceForm.get('netAmount')?.touched) {
+          <span class="error">Kwota musi być większa od 0</span>
+        }
+      </div>
+
+      <div class="form-group checkbox-group">
+        <label for="paid">Zapłacona:</label>
+        <input id="paid" type="checkbox" formControlName="paid">
+      </div>
+    </fieldset>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="!invoiceForm.valid || isSubmitting">
+        {{ isSubmitting ? 'Zapisywanie...' : 'Zaktualizuj' }}
+      </button>
+      <button type="button" (click)="onCancel()">Anuluj</button>
+    </div>
+  </form>
+}
+
