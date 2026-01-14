@@ -1,0 +1,102 @@
+
+services:
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: frontend-dev
+    ports:
+      - "4200:4200"
+    environment:
+      - API_URL=http://localhost:8080/api
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/angular.json:/app/angular.json
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/tsconfig.app.json:/app/tsconfig.app.json
+    depends_on:
+      - gateway-dev
+    restart: unless-stopped
+
+  gateway-dev:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile.dev
+    container_name: gateway-dev
+    ports:
+      - "8080:8080"
+    environment:
+      - CLIENT_SERVICE_URL=http://accounts-office-client-dev:8081
+      - INVOICE_SERVICE_URL=http://accounts-office-invoice-dev:8082
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - SPRING_DEVTOOLS_LIVERELOAD_ENABLED=true
+    volumes:
+      - ./gateway/src:/app/src
+      - ./gateway/pom.xml:/app/pom.xml
+    depends_on:
+      - accounts-office-client-dev
+      - accounts-office-invoice-dev
+    restart: unless-stopped
+
+  accounts-office-client-dev:
+    build:
+      context: ./accounts-office-client
+      dockerfile: Dockerfile.dev
+    container_name: accounts-office-client-dev
+    ports:
+      - "8081:8081"
+    environment:
+      - SERVER_PORT=8081
+      - INVOICE_SERVICE_URL=http://accounts-office-invoice-dev:8082
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/client_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - SPRING_DEVTOOLS_LIVERELOAD_ENABLED=true
+    volumes:
+      - ./accounts-office-client/src:/app/src
+      - ./accounts-office-client/pom.xml:/app/pom.xml
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  accounts-office-invoice-dev:
+    build:
+      context: ./accounts-office-invoice
+      dockerfile: Dockerfile.dev
+    container_name: accounts-office-invoice-dev
+    ports:
+      - "8082:8082"
+    environment:
+      - SERVER_PORT=8082
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/invoice_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - SPRING_DEVTOOLS_LIVERELOAD_ENABLED=true
+    volumes:
+      - ./accounts-office-invoice/src:/app/src
+      - ./accounts-office-invoice/pom.xml:/app/pom.xml
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+

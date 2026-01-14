@@ -1,0 +1,23 @@
+# Development Dockerfile with hot reload for Spring Boot Gateway
+FROM eclipse-temurin:17-jdk-jammy
+
+WORKDIR /app
+
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+COPY src src
+
+RUN chmod +x mvnw
+
+# Set environment to development profile
+ENV SPRING_PROFILES_ACTIVE=dev
+ENV SPRING_DEVTOOLS_RESTART_ENABLED=true
+ENV SPRING_DEVTOOLS_LIVERELOAD_ENABLED=true
+ENV SERVER_PORT=8080
+
+EXPOSE 8080
+
+# Run Spring Boot with Maven in development mode
+CMD ["./mvnw", "spring-boot:run", "-Dspring-boot.run.arguments=--spring.devtools.restart.enabled=true"]
+
