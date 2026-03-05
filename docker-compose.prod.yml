@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: ghcr.io/${GHCR_OWNER}/aui-frontend:latest
+    image: ghcr.io/skykuba/aui-frontend:latest
     container_name: frontend
     ports:
       - "8090:80"
@@ -11,7 +11,7 @@ services:
     restart: unless-stopped
 
   gateway:
-    image: ghcr.io/${GHCR_OWNER}/aui-gateway:latest
+    image: ghcr.io/skykuba/aui-gateway:latest
     container_name: gateway
     ports:
       - "8080:8080"
@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
 
   accounts-office-client:
-    image: ghcr.io/${GHCR_OWNER}/aui-accounts-office-client:latest
+    image: ghcr.io/skykuba/aui-accounts-office-client:latest
     container_name: accounts-office-client
     environment:
       - SERVER_PORT=8081
@@ -38,7 +38,7 @@ services:
     restart: unless-stopped
 
   accounts-office-invoice:
-    image: ghcr.io/${GHCR_OWNER}/aui-accounts-office-invoice:latest
+    image: ghcr.io/skykuba/aui-accounts-office-invoice:latest
     container_name: accounts-office-invoice
     environment:
       - SERVER_PORT=8082
